@@ -1,3 +1,4 @@
+package code.data_structure;
 class SLLNode<T>{
     SLLNode<T> next;
     T data;
@@ -261,6 +262,22 @@ public class SingleLinkedList<T> {
             return current.data;
         }else {
             System.out.println("Data " + data + " Is Not Found");
+            return null;
+        }
+    }
+
+    public T searchName(String name){
+        SLLNode<T> current = head;
+
+        while (current!= null && !current.data.equals(name)) {
+            current = current.next;
+        }
+
+        if(current != null && !current.isDeleted){
+            System.out.println("Data " + name + " Is Found In The List");
+            return current.data;
+        }else {
+            System.out.println("Data " + name + " Is Not Found");
             return null;
         }
     }
