@@ -1,4 +1,5 @@
 package code.data_structure;
+
 class PriorityQueueNode<T> {
     PriorityQueueNode<T> next;
     
@@ -56,5 +57,9 @@ public class PriorityQueue<T> {
 
     public boolean isEmpty(){
         return head == null;
+    }
+
+    public void clear(){
+        head = null;
     }
 }

@@ -1,4 +1,7 @@
 package code.data_structure;
+
+import java.util.Iterator;
+
 class SLLNode<T>{
     SLLNode<T> next;
     T data;
@@ -8,32 +11,53 @@ class SLLNode<T>{
         this.data = data;
         this.next = null;
     }
+
+    public SLLNode<T> getNext(){
+        return next;
+    }
+
+    public T getData(){
+        return data;
+    }
 }
 
-public class SingleLinkedList<T> {
+public class SingleLinkedList<T> implements Iterable<T>{
     SLLNode<T> head;
+    int softDeletedCount;
+    int sizeCount;
 
     public boolean isEmpty(){
-        return head == null;
+        return head == null || softDeletedCount == sizeCount;
+    }
+
+    public int getSize(){
+        return sizeCount;
+    }
+
+    public SLLNode<T> getHead(){
+        return head;
     }
     
     public T insertFirst(T data){
         SLLNode<T> nn = new SLLNode<>(data);
-        if(isEmpty()){
+        if(head == null){
             head = nn;
+            sizeCount++;
             return head.data;
         }
 
         nn.next = head;
         head = nn;
+        sizeCount++;
         return head.data;
     }
 
     public T insertLast(T data){
         SLLNode<T> nn = new SLLNode<>(data);
 
-        if(isEmpty()){
+        if(head == null){
             head = nn;
+            sizeCount++;
             return head.data;
         }
 
@@ -42,6 +66,7 @@ public class SingleLinkedList<T> {
             current = current.next;
         }
         current.next = nn;
+        sizeCount++;
         return nn.data;
     }
 
@@ -54,11 +79,13 @@ public class SingleLinkedList<T> {
             if (current.data.equals(searchData)) {
                 nn.next = current.next;
                 current.next = nn;
+                sizeCount++;
                 return nn.data;
+                
             }
             current = current.next;
         }
-        System.out.println(searchData + "is not found");
+        ////System.out.println(searchData + "is not found");
         return null;
     }
 
@@ -73,16 +100,23 @@ public class SingleLinkedList<T> {
     }
 
     private void deleteFirst(boolean permanent){
-        if(isEmpty()){
-            System.out.println("No Data Found");
+        if(head == null){
+            ////System.out.println("No Data Found");
             return;
         }
         if(permanent){
-            System.out.println("First Data: " + head.data.toString() + " Is PERMANENTLY deleted");
+            ////System.out.println("First Data: " + head.data.toString() + " Is PERMANENTLY deleted");
+            if(head.isDeleted) softDeletedCount--;
             head = head.next;
+            sizeCount--;
+            
         }else{
-            System.out.println("First Data: " + head.data.toString() + " Is SOFTLY deleted");
-            head.isDeleted = true;
+            if(head.isDeleted == false){
+                ////System.out.println("First Data: " + head.data.toString() + " Is SOFTLY deleted");
+                softDeletedCount++;
+                head.isDeleted = true;
+            }
+                
         }
     }
 
@@ -97,18 +131,12 @@ public class SingleLinkedList<T> {
     }
 
     private void deleteLast(boolean permanent){
-        if(isEmpty()){
-            System.out.println("No Data Found");
+        if(head == null){
+            ////System.out.println("No Data Found");
             return;
         }
         if(head.next == null){
-            if(permanent){
-                System.out.println("Head Data: " + head.data.toString() + " Is PERMANENTLY deleted");
-                head = null;
-            }else{
-                System.out.println("Head Data: " + head.data.toString() + " Is SOFTLY deleted");
-                head.isDeleted = true;
-            }
+            deleteFirst(permanent);
             return;
         }
 
@@ -117,11 +145,16 @@ public class SingleLinkedList<T> {
             current = current.next;
         }
         if(permanent){
-            System.out.println("Last Data: " + current.next.data.toString() + " Is PERMANENTLY deleted");
+            ////System.out.println("Last Data: " + current.next.data.toString() + " Is PERMANENTLY deleted");
+            if(current.next!= null && current.next.isDeleted == true) softDeletedCount--;
             current.next = null;
+            sizeCount--;
         }else{
-            System.out.println("Last Data: " + current.next.data.toString() + " Is SOFTLY deleted");
-            current.next.isDeleted = true;
+            if(!current.next.isDeleted){
+                ////System.out.println("Last Data: " + current.next.data.toString() + " Is SOFTLY deleted");
+                current.next.isDeleted = true;
+                softDeletedCount++;
+            }
         }
         return;
     }
@@ -137,8 +170,8 @@ public class SingleLinkedList<T> {
     }
 
     private void deleteNode(boolean permanent, T data){
-        if(isEmpty()){
-            System.out.println("No Data Found");
+        if(head == null){
+       //     System.out.println("No Data Found");
             return;
         }
 
@@ -148,7 +181,7 @@ public class SingleLinkedList<T> {
         }
         
         if(head.next == null){
-            System.out.println("No Data Found");
+            //System.out.println("No Data Found");
             return;
         }
 
@@ -158,17 +191,22 @@ public class SingleLinkedList<T> {
         }
         
         if (current.next == null) {
-            System.out.println("Data " + data + " Is Not Found");
+            //System.out.println("Data " + data + " Is Not Found");
             return;
         }
 
         if (permanent) { 
-            System.out.println("Data: " + current.next.data.toString() + " Is PERMANENTLY deleted");
+            //System.out.println("Data: " + current.next.data.toString() + " Is PERMANENTLY deleted");
+            if (current.next.isDeleted) softDeletedCount--;
             current.next = current.next.next;
+            sizeCount--;
            
         }else{
-            current.next.isDeleted = true;
-            System.out.println("Data: " + current.next.data.toString() + " Is SOFTLY deleted");
+            if(!current.next.isDeleted){
+                softDeletedCount++;
+                current.next.isDeleted = true;
+                //System.out.println("Data: " + current.next.data.toString() + " Is SOFTLY deleted");
+            }
         }
         return;
     }
@@ -179,16 +217,17 @@ public class SingleLinkedList<T> {
     public T recoverFirst(){
         if(head != null){
             if(!head.isDeleted){
-                System.out.println("There Is Only One Node, And Head Is Not Currently Deleted");
+                //System.out.println("There Is Only One Node, And Head Is Not Currently Deleted");
                 return head.data;
             }else{
                 head.isDeleted = false;
-                System.out.println(head.data.toString() + " Recovered");
+                //System.out.println(head.data.toString() + " Recovered");
+                softDeletedCount--;
                 return head.data;
             }
         }
 
-        System.out.println("No Data Found");
+        //System.out.println("No Data Found");
         return null;
     }
 
@@ -197,8 +236,8 @@ public class SingleLinkedList<T> {
     //============//
     public T recoverLast(){
         SLLNode<T> current = head;
-        if(isEmpty()){
-            System.out.println("No Data Found");
+        if(head == null){
+            //System.out.println("No Data Found");
             return null;
         }
 
@@ -211,10 +250,11 @@ public class SingleLinkedList<T> {
         }
 
         if(current.isDeleted){
+            softDeletedCount--;
            current.isDeleted = false;
-           System.out.println(current.data.toString() + " Recovered");
+           //System.out.println(current.data.toString() + " Recovered");
         }else{
-           System.out.println("The Last Node " + current.data.toString() + " Is Not Deleted");
+           //System.out.println("The Last Node " + current.data.toString() + " Is Not Deleted");
         }
         return current.data;
     }
@@ -225,8 +265,8 @@ public class SingleLinkedList<T> {
     public T recoverNode(T data){
         SLLNode<T> current = head;
 
-        if(isEmpty()){
-            System.out.println("No Data Is Found");
+        if(head == null){
+            //System.out.println("No Data Is Found");
             return null;
         }
         if(head.data.equals(data)){
@@ -238,13 +278,26 @@ public class SingleLinkedList<T> {
         }
 
         if(current != null){
-            current.isDeleted = false;
-            System.out.println(current.data.toString() + " Recovered");
+            if(current.isDeleted){
+                softDeletedCount--;
+                current.isDeleted = false;
+            }
+            //System.out.println(current.data.toString() + " Recovered");
             return current.data;
         }
 
-        System.out.println("Data " + data + " Is Not Found");
+        //System.out.println("Data " + data + " Is Not Found");
         return null;
+    }
+
+    public void recoverAll(){
+        SLLNode<T> current = head;
+
+        while (current != null) {
+            current.isDeleted = false;
+            current = current.next;
+        }
+        softDeletedCount = 0;
     }
 
     //======//
@@ -258,10 +311,10 @@ public class SingleLinkedList<T> {
         }
 
         if(current != null && !current.isDeleted){
-            System.out.println("Data " + data + " Is Found In The List");
+            //System.out.println("Data " + data + " Is Found In The List");
             return current.data;
         }else {
-            System.out.println("Data " + data + " Is Not Found");
+            //System.out.println("Data " + data + " Is Not Found");
             return null;
         }
     }
@@ -274,10 +327,10 @@ public class SingleLinkedList<T> {
         }
 
         if(current != null && !current.isDeleted){
-            System.out.println("Data " + name + " Is Found In The List");
+            //System.out.println("Data " + name + " Is Found In The List");
             return current.data;
         }else {
-            System.out.println("Data " + name + " Is Not Found");
+            //System.out.println("Data " + name + " Is Not Found");
             return null;
         }
     }
@@ -298,6 +351,49 @@ public class SingleLinkedList<T> {
         }
         return allData.toString();
     }
+
+    public void clear(){
+        head = null;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ListIterator<T>(this);
+    }
+}
+
+class ListIterator<T> implements Iterator<T>{
+
+    SLLNode<T> current;
+
+    public ListIterator(SingleLinkedList<T> list){
+        this.current = list.getHead();
+        moveToValidNext();
+    }
+
+    public void moveToValidNext(){
+        while(current != null && current.isDeleted){
+            current = current.getNext();
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+       return current != null;
+    }
+
+    @Override
+    public T next() {
+        T data = current.getData();
+        
+        current = current.getNext();
+
+        moveToValidNext();
+
+        return data;
+
+    }
+
 }
 
 //@AdityaAdnyana's SLL Created 12/8/25

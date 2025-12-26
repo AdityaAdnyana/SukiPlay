@@ -14,15 +14,15 @@ public class PacmanAPP{
 
         JFrame frame = new JFrame("Pac Man");
         frame.setVisible(true);
-        //frame.setSize(boardWidth, boardHeight);
+        frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         PacMan game = new PacMan();
         frame.add(game);
         frame.pack(); //Menyesuaikan ukuran window size sesuai minimum size
-
-
+        game.requestFocus();
     }
 }

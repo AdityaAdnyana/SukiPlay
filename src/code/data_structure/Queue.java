@@ -59,4 +59,9 @@ public class Queue<T> {
     public boolean isEmpty(){
         return head == null;
     }
+
+    public void clear(){
+        this.head = null;
+        this.tail = null;
+    }
 }
