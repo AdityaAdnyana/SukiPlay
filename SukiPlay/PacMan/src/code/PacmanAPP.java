@@ -25,4 +25,26 @@ public class PacmanAPP{
         frame.pack(); //Menyesuaikan ukuran window size sesuai minimum size
         game.requestFocus();
     }
+
+    public playPacMan(){
+        int rowCount = 18;
+        int columnCount = 38;
+        int tileSize = 32;
+
+        int boardWidth = columnCount * tileSize;
+        int boardHeight = rowCount * tileSize;
+
+        JFrame frame = new JFrame("Pac Man");
+        frame.setVisible(true);
+        frame.setSize(boardWidth, boardHeight);
+        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setResizable(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        PacMan game = new PacMan();
+        frame.add(game);
+        frame.pack(); //Menyesuaikan ukuran window size sesuai minimum size
+        game.requestFocus();
+    }
 }

@@ -64,6 +64,9 @@ class GameLibrary {
                 System.out.println(">> LAUNCHING: " + temp.judulGame + "...");
                 System.out.println(">> Selamat Bermain!");
                 ditemukan = true;
+
+                PacmanApp pacmanGame = new PacmanApp();
+                pacmanGame.playPacMan();
                 break;
             }
             temp = temp.next;
