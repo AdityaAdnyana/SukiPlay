@@ -26,7 +26,7 @@ public class PacmanAPP{
         game.requestFocus();
     }
 
-    public playPacMan(){
+    public void playPacMan(){
         int rowCount = 18;
         int columnCount = 38;
         int tileSize = 32;

@@ -1,12 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-package com.mycompany.sukimon;
+package Sukimon.src;
 
-/**
- *
- * @author R9480
- */
 import java.util.Scanner;
 import java.util.Random;
 import java.io.File;
@@ -24,7 +17,7 @@ public class Sukimon {
     public static void main(String[] args) {
         Sukimon menu = new Sukimon();
 
-        String music = "Back sound (no copyright ya).WAV";
+        String music = "/backsound.WAV";
         menu.Music(music);
 
         menu.runthis();
@@ -151,7 +144,8 @@ public class Sukimon {
         try {
             File lokasiFile = new File(lokasi);
             if (lokasiFile.exists()) {
-                AudioInputStream input = AudioSystem.getAudioInputStream(lokasiFile);
+                //new ImageIcon(getClass().getResource("art/cherry2.png")).getImage()
+                AudioInputStream input = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(lokasi));
                 Clip clip = AudioSystem.getClip();
                 clip.open(input);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);

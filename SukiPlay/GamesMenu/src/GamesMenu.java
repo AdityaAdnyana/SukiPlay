@@ -1,10 +1,9 @@
-package com.mycompany.gamesmenu;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 
 import java.util.Scanner;
+
+import Sukimon.src.Sukimon;
+import code.PacmanAPP;
+import src.RusianRoulate;
 
 // 1. CLASS NODE: Merepresentasikan satu Game
 class GameNode {
@@ -15,6 +14,40 @@ class GameNode {
         this.judulGame = judulGame;
         this.next = null;
     }
+}
+
+class Akun {
+    String nama;
+    String pass;
+
+    public Akun(String nama, String pass) {
+        this.nama = nama;
+        this.pass = pass;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Akun input = (Akun) obj;
+        return getNama().equals(input.getNama()) && getPass().equals(input.getPass());
+    }
+
+    @Override
+    public String toString() {
+        return getNama();
+    }
+
 }
 
 // 2. CLASS LINKED LIST: Mengelola Library Game
@@ -65,8 +98,24 @@ class GameLibrary {
                 System.out.println(">> Selamat Bermain!");
                 ditemukan = true;
 
-                PacmanApp pacmanGame = new PacmanApp();
-                pacmanGame.playPacMan();
+                switch (temp.judulGame) {
+                    case "Pacman":
+                        PacmanAPP pacmanGame = new PacmanAPP();
+                        pacmanGame.playPacMan();
+                        break;
+                    case "Sukimon":
+                        Sukimon skm = new Sukimon();
+                        skm.home();
+                        break;
+                    case "RusianRoulate":
+                        RusianRoulate rr = new RusianRoulate();
+                        rr.round();
+                        break;
+                    default:
+                        System.out.println("GAADA KOCAK");
+                        break;
+                }
+
                 break;
             }
             temp = temp.next;
@@ -79,38 +128,105 @@ class GameLibrary {
     }
 }
 
+class AkunManager {
+    static Scanner scanner = new Scanner(System.in);
+
+    public static SingleLinkedList<Akun> sllAccount = new SingleLinkedList<>();
+
+    private static void registrasi() {
+        System.out.println("Masukkan Username Baru: ");
+        String user = scanner.nextLine();
+        scanner.nextLine();
+        System.out.print("Password : ");
+        String pass = scanner.nextLine();
+
+        sllAccount.insertFirst(new Akun(user, pass));
+        Akun dummy = new Akun(user, pass);
+        System.out.println("REGISTRASI BERHASIL: " + sllAccount.searchData(dummy));
+        menu();
+    }
+
+    private static void login() {
+        System.out.print("Username : ");
+        String user = scanner.nextLine();
+        scanner.nextLine();
+        System.out.print("Password : ");
+        String pass = scanner.nextLine();
+
+        Akun newInput = new Akun(user, pass);
+
+        boolean isAkunFound = newInput.equals(sllAccount.searchData(newInput));
+
+        if (isAkunFound) {
+            System.out.println("\nLogin Berhasil! Selamat datang, " + user + ".");
+        } else {
+            System.out.println("[!] Username atau Password salah. Coba lagi.\n");
+            menu();
+        }
+    }
+
+    public static void menu(){
+        System.out.println("1. REGISTRASI / 2. LOGIN");
+        int regisOrLogin = -1;
+
+    
+            regisOrLogin = scanner.nextInt();
+        
+
+        switch (regisOrLogin) {
+            case 1:
+                registrasi();
+                break;
+            case 2:
+                login();
+                break;
+            default:
+                menu();
+                break;
+
+        }
+    }
+
+}
+
+
 // 3. CLASS MAIN: Login & Menu Utama
 public class GamesMenu {
+    static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         GameLibrary myGames = new GameLibrary();
 
         // Mengisi Data Linked List (Pre-installed Games)
-        myGames.tambahGame("Mobile Legends");
-        myGames.tambahGame("PUBG Mobile");
-        myGames.tambahGame("Minecraft");
-        myGames.tambahGame("Genshin Impact");
+        myGames.tambahGame("Pacman");
+        myGames.tambahGame("Sukimon");
+        myGames.tambahGame("RussianRoulate");
 
         // --- BAGIAN 1: LOGIN ---
         System.out.println("################################");
         System.out.println("#        SUKI LAUNCHER         #");
         System.out.println("################################");
-        
-        boolean isLogged = false;
-        while (!isLogged) {
-            System.out.print("Username : ");
-            String user = scanner.nextLine();
-            System.out.print("Password : ");
-            String pass = scanner.nextLine();
 
-            // Validasi Login (User: gamer, Pass: main123)
-            if (user.equals("Salman") && pass.equals("momon")) {
-                isLogged = true;
-                System.out.println("\nLogin Berhasil! Selamat datang, " + user + ".");
-            } else {
-                System.out.println("[!] Username atau Password salah. Coba lagi.\n");
-            }
-        }
+        AkunManager.menu();
+
+        
+
+        // boolean isLogged = false;
+        // while (!isLogged) {
+        // System.out.print("Username : ");
+        // String user = scanner.nextLine();
+        // System.out.print("Password : ");
+        // String pass = scanner.nextLine();
+
+        // // Validasi Login (User: gamer, Pass: main123)
+        // if (user.equals("Salman") && pass.equals("momon") || user.equals("Adit") &&
+        // pass.equals("ditya")) {
+        // isLogged = true;
+        // System.out.println("\nLogin Berhasil! Selamat datang, " + user + ".");
+        // } else {
+        // System.out.println("[!] Username atau Password salah. Coba lagi.\n");
+        // }
+        // }
 
         // --- BAGIAN 2: MENU UTAMA ---
         boolean running = true;
@@ -120,7 +236,7 @@ public class GamesMenu {
             System.out.println("2. Mainkan Game (Pilih Game)");
             System.out.println("3. Logout / Keluar");
             System.out.print("Pilih menu [1-3]: ");
-            
+
             String input = scanner.nextLine(); // Menggunakan nextLine agar buffer aman
 
             switch (input) {
