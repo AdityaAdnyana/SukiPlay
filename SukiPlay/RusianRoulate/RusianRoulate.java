@@ -9,12 +9,32 @@ public class RusianRoulate {
     
     public static void main(String []args){
         RusianRoulate RR = new RusianRoulate();       
-        RR.round();
+        RR.mainMenu(RR);
     }
 
-    public void round(){
+    public void mainMenu(RusianRoulate RR){
         Scanner scanner = new Scanner (System.in);
         System.out.println("=== Russian Roulette ===");
+        System.out.println("======   Option   =====");
+        System.out.println("1.   Play");
+        System.out.println("2.   Quit");
+        System.out.print("Pilih aksi: ");
+        
+        int opsi = scanner.nextInt();
+        switch (opsi) {
+            case 1:
+                RR.round(RR);
+            break;
+            case 2:
+                System.out.println("Bye~ Bye~");
+            break;
+            default:
+                break;
+        }
+    }
+
+    public void round(RusianRoulate RR){
+        Scanner scanner = new Scanner (System.in);
         System.out.print("Masukan nama player : ");
         String plyName = scanner.nextLine();
         
@@ -50,10 +70,12 @@ public class RusianRoulate {
             // Cek Kematian sebelum giliran
             if(ply.HP <= 0){
                 System.out.println("Anda Mati! Game Over.");
-                return;
+                RR.mainMenu(RR);
+                break;
             } else if (com.HP <= 0){
                 System.out.println("Musuh Mati! Anda Menang.");
-                return;
+                RR.mainMenu(RR);
+                break;
             }
 
             if(turn == 1){ // Giliran Player (Ganjil)
