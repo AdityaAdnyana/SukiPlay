@@ -1,4 +1,5 @@
 
+
 import java.util.Scanner;
 
 import Sukimon.src.Sukimon;
@@ -105,9 +106,9 @@ class GameLibrary {
                         break;
                     case "Sukimon":
                         Sukimon skm = new Sukimon();
-                        skm.home();
+                        skm.play();
                         break;
-                    case "RusianRoulate":
+                    case "Rusian Roulate":
                         RusianRoulate rr = new RusianRoulate();
                         rr.round();
                         break;
@@ -200,7 +201,7 @@ public class GamesMenu {
         // Mengisi Data Linked List (Pre-installed Games)
         myGames.tambahGame("Pacman");
         myGames.tambahGame("Sukimon");
-        myGames.tambahGame("RussianRoulate");
+        myGames.tambahGame("Rusian Roulate");
 
         // --- BAGIAN 1: LOGIN ---
         System.out.println("################################");

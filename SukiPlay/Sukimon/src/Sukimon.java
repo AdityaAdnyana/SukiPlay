@@ -2,7 +2,6 @@ package Sukimon.src;
 
 import java.util.Scanner;
 import java.util.Random;
-import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,11 +12,22 @@ public class Sukimon {
 
     Scanner input = new Scanner(System.in);
     Random acak = new Random();
+
+    Clip clip;
     
     public static void main(String[] args) {
         Sukimon menu = new Sukimon();
 
-        String music = "/backsound.WAV";
+        String music = "backsound.wav";
+        menu.Music(music);
+
+        menu.runthis();
+    }
+
+    public void play(){
+        Sukimon menu = new Sukimon();
+
+        String music = "backsound.wav";
         menu.Music(music);
 
         menu.runthis();
@@ -142,17 +152,16 @@ public class Sukimon {
     //ini buat music
     public void Music(String lokasi) {
         try {
-            File lokasiFile = new File(lokasi);
-            if (lokasiFile.exists()) {
-                //new ImageIcon(getClass().getResource("art/cherry2.png")).getImage()
-                AudioInputStream input = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(lokasi));
-                Clip clip = AudioSystem.getClip();
+
+           if (getClass().getResource(lokasi) != null) {
+                AudioInputStream input = AudioSystem.getAudioInputStream(getClass().getResource(lokasi));
+                this.clip = AudioSystem.getClip();
                 clip.open(input);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clip.start();
-            } else {
-                System.out.println("File tidak ada");
-            }
+           } else {
+               System.out.println("File tidak ada");
+           }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -182,6 +191,7 @@ public class Sukimon {
                     break;
                 case 2:
                     System.out.println("Terima kasih telah bermain.");
+                    clip.stop();
                     break;
                 default:
                     home();
